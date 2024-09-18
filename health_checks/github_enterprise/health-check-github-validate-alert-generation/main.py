@@ -34,9 +34,9 @@ client.setup_logging()
 
 # Initialize an authorized HTTP session with Google SecOps
 HTTP_SESSION = secops_auth.initialize_http_session(
-        google_secops_api_credentials=json.loads(os.environ["GOOGLE_SECOPS_API_CREDENTIALS"]),
-        scopes=json.loads(os.environ["GOOGLE_SECOPS_AUTHORIZATION_SCOPES"]).get("GOOGLE_SECOPS_API"),
-    )
+    google_secops_api_credentials=json.loads(os.environ["GOOGLE_SECOPS_API_CREDENTIALS"]),
+    scopes=json.loads(os.environ["GOOGLE_SECOPS_AUTHORIZATION_SCOPES"]).get("GOOGLE_SECOPS_API"),
+)
 
 # Rule ID for the GitHub rule that we're triggering regularly via a separate health check job (Cloud Run function)
 RULE_ID = os.environ["GITHUB_HEALTH_CHECK_RULE_ID"]
@@ -45,7 +45,9 @@ RULE_ID = os.environ["GITHUB_HEALTH_CHECK_RULE_ID"]
 # Convert time to string format %Y-%m-%dT%H:%M:%SZ for UDM search query
 CURRENT_TIME = datetime.datetime.now()
 END_TIME = datetime_converter.strftime(CURRENT_TIME)
-START_TIME = datetime_converter.strftime(CURRENT_TIME - datetime.timedelta(hours=int(os.environ["SEARCH_TIME_WINDOW_HOURS"])))
+START_TIME = datetime_converter.strftime(
+    CURRENT_TIME - datetime.timedelta(hours=int(os.environ["SEARCH_TIME_WINDOW_HOURS"]))
+)
 
 
 def validate_detection_generation():
@@ -53,7 +55,9 @@ def validate_detection_generation():
     raw_detections = []
     next_page_token = None
 
-    logging.info("Searching for detections for rule ID %s with start time %s and end time %s", RULE_ID, START_TIME, END_TIME)
+    logging.info(
+        "Searching for detections for rule ID %s with start time %s and end time %s", RULE_ID, START_TIME, END_TIME
+    )
 
     while True:
         retrieved_detections, next_page_token = search_detections(
@@ -81,7 +85,9 @@ def validate_detection_generation():
             raw_detections.extend(retrieved_detections)
 
         if next_page_token:
-            logging.info("Attempting to retrieve detections for rule ID %s with page token %s", RULE_ID, next_page_token)
+            logging.info(
+                "Attempting to retrieve detections for rule ID %s with page token %s", RULE_ID, next_page_token
+            )
         else:
             break  # Break if there are no more pages of detections to retrieve
 
@@ -97,9 +103,9 @@ def validate_alert_generation():
     if not retrieved_alerts:
         logging.error("No alerts found for any rules between %s and %s", START_TIME, END_TIME)
         raise Exception(
-                f"No alerts found for any rules between {START_TIME} and {END_TIME}. Check data pipeline and rule for issues."
-            )
-    
+            f"No alerts found for any rules between {START_TIME} and {END_TIME}. Check data pipeline and rule for issues."
+        )
+
     relevant_alerts = []
 
     for alert in retrieved_alerts["ruleAlerts"]:
@@ -109,11 +115,13 @@ def validate_alert_generation():
     if len(relevant_alerts) == 0:
         logging.error("No alerts found for rule ID %s between %s and %s", RULE_ID, START_TIME, END_TIME)
         raise Exception(
-                f"No alerts found for rule ID {RULE_ID} between {START_TIME} and {END_TIME}. Check data pipeline and rule for issues."
-            )
+            f"No alerts found for rule ID {RULE_ID} between {START_TIME} and {END_TIME}. Check data pipeline and rule for issues."
+        )
 
     else:
-        logging.info("Retrieved %s alerts for rule ID %s between %s and %s", len(relevant_alerts), RULE_ID, START_TIME, END_TIME)
+        logging.info(
+            "Retrieved %s alerts for rule ID %s between %s and %s", len(relevant_alerts), RULE_ID, START_TIME, END_TIME
+        )
 
 
 def main(payload):

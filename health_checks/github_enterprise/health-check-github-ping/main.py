@@ -23,6 +23,7 @@ import logging
 import os
 
 import requests
+
 # Import the Google Cloud Logging client library (https://cloud.google.com/logging/docs/setup/python#view_the_logs)
 import google.cloud.logging
 
@@ -47,9 +48,7 @@ def ping_github_api(payload):
 
     github_org_name = os.environ["HEALTH_CHECK_GITHUB_ORG_NAME"]
     logging.info("Attempting to retrieve GitHub organization information for %s", github_org_name)
-    response = requests.get(
-        f"https://api.github.com/orgs/{github_org_name}", headers=headers
-    )
+    response = requests.get(f"https://api.github.com/orgs/{github_org_name}", headers=headers)
 
     if response.status_code >= 400:
         print(response.text)
