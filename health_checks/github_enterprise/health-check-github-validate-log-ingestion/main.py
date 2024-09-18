@@ -19,8 +19,6 @@ import json
 import logging
 import os
 
-import google.auth.transport.requests
-
 # Import the Google Cloud Logging client library (https://cloud.google.com/logging/docs/setup/python#view_the_logs)
 import google.cloud.logging
 

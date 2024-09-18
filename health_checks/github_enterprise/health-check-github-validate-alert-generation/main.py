@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""This Cloud Run function validates that a GitHub Enterprise health check rule in Google SecOps has generated a recent detection and alert."""
+"""This function validates that a GitHub Enterprise health check rule in Google SecOps has generated a recent detection and alert."""
 
 import datetime
 import json
@@ -125,7 +125,6 @@ def validate_alert_generation():
 
 
 def main(payload):
-    """Entry point for Cloud Run function."""
     validate_detection_generation()
     validate_alert_generation()
     return "OK"
