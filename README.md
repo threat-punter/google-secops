@@ -7,7 +7,7 @@ Example code for working with Google Security Operations (SecOps)
 Example code to implement security data pipeline health checks with Google SecOps.
 
 Please refer to the following blog series for further details and context: Practical Techniques for Monitoring Your
-Security Data Pipeline
+Security Data Pipeline ([Part 1](https://www.googlecloudcommunity.com/gc/Community-Blog/Practical-Techniques-for-Monitoring-Your-Security-Data-Pipeline/ba-p/809060), [Part 2](https://www.googlecloudcommunity.com/gc/Community-Blog/Practical-Techniques-for-Monitoring-Your-Security-Data-Pipeline/ba-p/809062))
 
 This example code can be customized and executed in Google [Cloud Run Functions](https://cloud.google.com/functions),
 an automation tool, or a CI/CD pipeline to validate that your security logging, ingestion, search, detection, and
