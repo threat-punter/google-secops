@@ -22,9 +22,9 @@ import os
 # Import the Google Cloud Logging client library (https://cloud.google.com/logging/docs/setup/python#view_the_logs)
 import google.cloud.logging
 
-from secops_api import secops_auth
-from secops_api.search.udm_search_legacy import udm_search
 from common import datetime_converter
+from secops_api import secops_auth
+from secops_api.search.udm_search import udm_search
 
 client = google.cloud.logging.Client()  # Instantiate the logging client
 # Retrieve a Cloud Logging handler based on the environment you're running in and integrates the handler with the
@@ -32,18 +32,12 @@ client = google.cloud.logging.Client()  # Instantiate the logging client
 client.setup_logging()
 
 
-def initialize_http_session() -> google.auth.transport.requests.AuthorizedSession:
-    """Initialize an authorized HTTP session with Google SecOps."""
-    # This code uses the Google SecOps Backstory API
-    return secops_auth.initialize_http_session(
-        google_secops_api_credentials=json.loads(os.environ["GOOGLE_SECOPS_BACKSTORY_API_CREDENTIALS"]),
-        scopes=[os.environ["GOOGLE_SECOPS_BACKSTORY_AUTHORIZATION_SCOPE"]],
-    )
-
-
 def validate_github_log_ingestion(payload):
     """Validate that test events were ingested into Google SecOps."""
-    http_session = initialize_http_session()
+    http_session = secops_auth.initialize_http_session(
+        google_secops_api_credentials=json.loads(os.environ["GOOGLE_SECOPS_API_CREDENTIALS"]),
+        scopes=json.loads(os.environ["GOOGLE_SECOPS_AUTHORIZATION_SCOPES"]).get("GOOGLE_SECOPS_API"),
+        )
 
     end_time = datetime.datetime.now()
     start_time = end_time - datetime.timedelta(hours=int(os.environ["SEARCH_TIME_WINDOW_HOURS"]))
